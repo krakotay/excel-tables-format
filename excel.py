@@ -82,16 +82,22 @@ def create_title_sheet(
     # Дата формирования и номер
 
     # Create rich text with different formatting
-    text_parts = [
+    from openpyxl.cell.rich_text import CellRichText, TextBlock
+    from openpyxl.cell.text import InlineFont
+    
+    # Merge cells and set alignment
+    ws.merge_cells("A8:E8")
+    cell = ws["A8"]
+    cell.alignment = Alignment(horizontal="center", vertical="center")
+    
+    # Create rich text with different formatting for the number
+    rich_text = CellRichText(
         f"Дата формирования {formation_date} ",
         " " * 100,
         "№ ",
-        str(number_number)
-    ]
-    rich_text = ''.join(text_parts)
-    ws.merge_cells("A8:E8")
-    ws["A8"].alignment = Alignment(horizontal="center", vertical="center")
-    ws["A8"] = rich_text
+        TextBlock(InlineFont(u="single"), str(number_number))
+    )
+    cell.value = rich_text
 
     # ФИО — именно по центру колонки A:E
     ws.merge_cells("A10:E10")
@@ -215,7 +221,7 @@ if __name__ == "__main__":
         ),
         as_of_date="16.01.2025",
         formation_date="16.01.2025",
-        number_number=123,
+        number_number=123456789101112,
         full_name="ЭРМАТОВ МУСТАФАКУЛ САЙДУЛЛАЕВИЧ",
         inn="384913640328",
         dob="27.01.1975",
