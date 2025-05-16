@@ -67,7 +67,7 @@ def create_title_sheet(
     ws["A1"].alignment = Alignment(horizontal="right", vertical="center")
 
     ws.merge_cells("A2:E2")
-    ws["A2"] = form_number  
+    ws["A2"] = form_number
     ws["A2"].alignment = Alignment(horizontal="right", vertical="center")
 
     # Заголовок отчёта
@@ -77,17 +77,19 @@ def create_title_sheet(
     ws["A3"].alignment = Alignment(
         horizontal="center", vertical="center", wrap_text=True
     )
+    ws.row_dimensions[3].height = 15 * 2
+
+
     ws.merge_cells("A6:E6")
     ws["A6"].alignment = Alignment(horizontal="center", vertical="center")
-    ws["A6"] =CellRichText(
-        "По состоянию на ",
-        TextBlock(InlineFont(u="single"), as_of_date)
+    ws["A6"] = CellRichText(
+        "По состоянию на ", TextBlock(InlineFont(u="single"), as_of_date)
     )
 
     # Дата формирования и номер
 
     # Create rich text with different formatting
-    
+
     # Merge cells and set alignment
     ws.merge_cells("A8:E8")
     cell = ws["A8"]
@@ -98,7 +100,7 @@ def create_title_sheet(
         f"Дата формирования {formation_date} ",
         " " * 100,
         "№ ",
-        TextBlock(InlineFont(u="single"), str(number_number))
+        TextBlock(InlineFont(u="single"), str(number_number)),
     )
     cell.value = rich_text
 
