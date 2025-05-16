@@ -88,7 +88,7 @@ def create_title_sheet(
         "№ ",
         str(number_number)
     ]
-    rich_text = ''
+    rich_text = ''.join(text_parts)
     ws.merge_cells("A8:E8")
     ws["A8"].alignment = Alignment(horizontal="center", vertical="center")
     ws["A8"] = rich_text
