@@ -4,6 +4,7 @@ from openpyxl.utils import get_column_letter
 from openpyxl.cell.rich_text import CellRichText, TextBlock
 from openpyxl.cell.text import InlineFont
 
+
 def create_title_sheet(
     output_path: str,
     form_code: str,
@@ -11,7 +12,7 @@ def create_title_sheet(
     report_title: str,
     as_of_date: str,
     formation_date: str,
-    number_number: int,
+    number_number: str,
     full_name: str,
     inn: str,
     dob: str,
@@ -29,7 +30,7 @@ def create_title_sheet(
         "Сведения о банковских счетах (вкладах, электронных средствах платежа (ЭСП))\nфизического лица, не являющегося ИП"
     - as_of_date: строка даты по состоянию на, например "16.01.2025"
     - formation_date: строка даты формирования, например "16.01.2025"
-    - number_number: какой-то номер, например 123
+    - number_number: какой-то номер, например '123'
     - full_name: ФИО
     - inn: ИНН
     - dob: дата рождения, например "27.01.1975"
@@ -94,7 +95,7 @@ def create_title_sheet(
     ws.merge_cells("A8:E8")
     cell = ws["A8"]
     cell.alignment = Alignment(horizontal="center", vertical="center")
-    
+
     # Create rich text with different formatting for the number
     rich_text = CellRichText(
         f"Дата формирования {formation_date} ",

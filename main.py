@@ -1,6 +1,7 @@
 import polars as pl
 from excel import create_title_sheet
 import datetime
+
 DOC = "1746105004_СчетаООО  ВНЕШИНТОРГ.xlsx"
 
 
@@ -12,19 +13,23 @@ def main(filename: str):
         accounts.append(
             {
                 "bank_name": row["КО: Наименование"],
-                "bank_details": f"РегНом/НомФ: {row["Счет: Регномер"]} ИНН/КПП: {row["КО: ИНН"]}/{row["КО: КПП"]} БИК(СВИФТ): {row["КО: БИК"]}",
+                "bank_details": f"РегНом/НомФ: {row['Счет: Регномер']} ИНН/КПП: {row['КО: ИНН']}/{row['КО: КПП']} БИК(СВИФТ): {row['КО: БИК']}",
                 "address": row["КО: Адрес"],
                 "account_number": row["Счет: Номер"],
-                "open_date": row["Счет: Дата открытия"].removesuffix(' 00:00:00') if row["Счет: Дата открытия"] else None,
+                "open_date": row["Счет: Дата открытия"].removesuffix(" 00:00:00")
+                if row["Счет: Дата открытия"]
+                else None,
                 "status": row["Счет: Состояние"],
                 "account_type": row["Счет: Вид"] or row["Счет: Вид (5.12)"],
-                "close_date": row["Счет: Дата закрытия"].removesuffix(' 00:00:00') if row["Счет: Дата закрытия"] else None,
+                "close_date": row["Счет: Дата закрытия"].removesuffix(" 00:00:00")
+                if row["Счет: Дата закрытия"]
+                else None,
             }
         )
     datetime_now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=3)))
     formation_date = datetime_now.strftime("%d.%m.%Y")
-    full_name = df['Наименование правообладателя'].first()
-    inn = df['НП: ИНН'].first()
+    full_name = df["Наименование правообладателя"].first()
+    inn = df["НП: ИНН"].first()
     create_title_sheet(
         output_path=DOC.replace(".xlsx", "_формат.xlsx"),
         form_code="Форма по КНД 1120499",
@@ -35,7 +40,7 @@ def main(filename: str):
         ),
         as_of_date=formation_date,
         formation_date=formation_date,
-        number_number=' ' * 10,
+        number_number=" " * 10,
         full_name=full_name,
         inn=inn,
         dob=None,
