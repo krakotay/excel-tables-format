@@ -1,6 +1,8 @@
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Side, Font
 from openpyxl.utils import get_column_letter
+from openpyxl.cell.rich_text import CellRichText, TextBlock
+from openpyxl.cell.text import InlineFont
 
 def create_title_sheet(
     output_path: str,
@@ -77,13 +79,14 @@ def create_title_sheet(
     )
     ws.merge_cells("A6:E6")
     ws["A6"].alignment = Alignment(horizontal="center", vertical="center")
-    ws["A6"] = f"По состоянию на {as_of_date}"
+    ws["A6"] =CellRichText(
+        "По состоянию на ",
+        TextBlock(InlineFont(u="single"), as_of_date)
+    )
 
     # Дата формирования и номер
 
     # Create rich text with different formatting
-    from openpyxl.cell.rich_text import CellRichText, TextBlock
-    from openpyxl.cell.text import InlineFont
     
     # Merge cells and set alignment
     ws.merge_cells("A8:E8")
@@ -112,7 +115,7 @@ def create_title_sheet(
 
     # ДР и МПР — тоже по центру
     ws.merge_cells("A12:E12")
-    ws["A12"] = f"Дата рождения: {dob}, Место рождения: {pob}"
+    ws["A12"] = f"Дата рождения: {dob}, Место рождения: {pob}" if dob and pob else ""
     ws["A12"].alignment = Alignment(horizontal="center", vertical="center")
 
     # Заголовки таблицы
@@ -180,12 +183,13 @@ def create_title_sheet(
         # Проверяем длину текста в каждой ячейке столбца
         for cell in ws[letter]:
             try:
-                if len(str(cell.value)) > max_length:
+                if cell.value is not None and len(str(cell.value)) > max_length:
                     max_length = len(str(cell.value))
-            except:
-                pass
-        # Устанавливаем ширину с небольшим запасом
-        adjusted_width = (max_length + 2) * 1.1
+            except (AttributeError, TypeError, ValueError):
+                # Skip cells with values that can't be converted to string
+                continue
+        # Устанавливаем ширину с увеличенным запасом
+        adjusted_width = (max_length + 8) * 1.2
         ws.column_dimensions[letter].width = min(
             adjusted_width, 40
         )  # Максимальная ширина 40 символов
